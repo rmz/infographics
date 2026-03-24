@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tooltip Example</title>
+</head>
+<body>
+    <!-- HTML structure with a hidden tooltip div -->
+<div class="tooltip" style="position: absolute; display: none; background: #eee; padding: 5px;"></div>
+<svg width="600" height="200">
+  <!-- Use mouse event handlers to show/hide the tooltip div -->
+  <rect width="100" height="50" fill="blue" 
+        onmousemove="showTooltip(evt, 'Tooltip Text')" 
+        onmouseout="hideTooltip();" />
+  <rect width="100" height="50" fill="red" x="150" 
+        onmousemove="showTooltip(evt, 'Second Tooltip Text')" 
+        onmouseout="hideTooltip();" />
+</svg>
+
+<script>
+  function showTooltip(evt, text) {          // Function to display a tooltip at the mouse position
+  let tooltip = document.getElementsByClassName("tooltip")[0]; // Get the first element with class "tooltip"
+  tooltip.innerHTML = text;              // Set the tooltip's content to the provided text
+  tooltip.style.display = "block";       // Make the tooltip visible
+  tooltip.style.left = evt.pageX + 20 + 'px'; // Position tooltip horizontally (20px right of cursor)
+  tooltip.style.top = evt.pageY + 20 + 'px';  // Position tooltip vertically (20px below cursor)
+}
+
+function hideTooltip() {                 // Function to hide the tooltip
+  document.getElementsByClassName("tooltip")[0].style.display = "none"; // Hide the tooltip element
+}
+</script>
+</body>
+</html>
