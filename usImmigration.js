@@ -3,7 +3,7 @@
 //entries is an array of objects describing each observed element’s visibility.
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => { //Loop through observed entries
-        console.log(entry) //Log the entry and its properties to the console for debugging purposes.
+        //console.log(entry) //Log the entry and its properties to the console for debugging purposes.
         if (entry.isIntersecting) { //Check if the element is visible
             entry.target.classList.add('show'); //Add the 'show' class if the element is visible else remove it
         } else {
