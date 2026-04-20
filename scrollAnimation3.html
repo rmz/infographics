@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSS Scroll Fade Sections</title>
+
+<style>
+  * {
+      box-sizing: border-box;
+    }
+        
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  /* Layout */
+  .container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .left {
+    width: 40%;
+    background: #111;
+    color: white;
+    padding: 40px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+
+  .right {
+    width: 60%;
+    height: 100vh;
+    overflow-y: auto;
+    background: #fff;
+  }
+
+  /* Section styling */
+  section {
+    height: 100vh;
+    display: flex;
+    align-items: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: center;
+
+    /* Scroll animation setup
+    double-dash prefix is used to define custom properties or CSS variables */
+    view-timeline-name: --section;
+    view-timeline-axis: block;
+  }
+
+  #title {
+    max-width: 800px;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    margin: auto;
+  }
+  
+  .content {
+    max-width: 80%;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    opacity: 0;
+
+    /* Attach animation to scroll */
+    animation-name: fade;
+    animation-timeline: --section;
+    /* ENTRY -------- COVER --------    EXIT --------   GONE
+        |              |                  |              | */
+    animation-range: entry 0% cover 50%, exit 100% exit 100%;
+    animation-fill-mode: both;
+  }
+
+  /* Fade in to out */
+  @keyframes fade {
+    0%   { opacity: 0; }
+    25%  { opacity: 1; }
+    75%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+/* Audio Controls */
+button {
+	width: 30px;
+	height: 30px;
+	color: white;
+	background-color: black;
+	border: 1px solid white;
+	font-size: 1.5em;
+	margin: 0 4px 0 4px;
+	padding: 0 2px 0 2px;
+	border-radius: 8px;
+}
+button:hover {
+	background-color: rgba(255,0,0,0.5);
+}
+button:focus {
+	outline-color: rgba(255,0,0,0.5);
+}
+button:active {
+	outline-color: yellow;
+}
+
+/* ==================== CAROUSEL ==================== */
+.carousel-container {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  border-radius: 12px;
+  scrollbar-width: none;
+
+  /* SCROLL-MARKER-GROUP: Position dots below carousel */
+  scroll-marker-group: after;
+}
+
+/* SCROLL-MARKER-GROUP: Style the dot container */
+.carousel::scroll-marker-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.carousel-slide {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+
+  /* SCROLL-STATE: Enable snapped detection for this slide */
+  container-type: scroll-state;
+  container-name: slide;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+
+  transition: all 0.3s ease;
+  opacity: 0.5;
+  scale: 0.75;
+}
+
+@container slide scroll-state(snapped: x) {
+  .carousel-slide img {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* SCROLL-MARKER: Create dot for each slide */
+.carousel-slide::scroll-marker {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background: #d1d5db;
+  border: 1px solid #9ca3af;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.carousel-slide::scroll-marker:hover {
+  background: #9ca3af;
+}
+
+/* SCROLL-MARKER: Highlight active dot */
+.carousel-slide::scroll-marker:target-current {
+  background: #3b82f6;
+  transform: scale(1.3);
+  border: 1px solid black;
+}
+
+/* SCROLL-BUTTON: Create arrow buttons */
+.carousel::scroll-button(*) {
+  border: none;
+  background: white;
+  color: #374151;
+  font-size: 1.25rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.carousel::scroll-button(*):hover:not(:disabled) {
+  background: #3b82f6;
+  color: white;
+}
+
+.carousel::scroll-button(*):disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.carousel::scroll-button(left) {
+  content: "←";
+  left: 1.5rem;
+}
+
+.carousel::scroll-button(right) {
+  content: "→";
+  right: 1.5rem;
+}
+
+/* Switch to vertical layout when screen is 768px or smaller */
+@media (max-width: 800px) {
+  .container {
+    flex-direction: column; /* Items stack vertically */
+  }
+
+  .left, .right {
+    width: 100%; /* Full width for both sections */
+    height: auto; /* Allow height to adjust based on content */
+    margin: 0; /* Remove any default margins */
+    padding: 20px; /* Add some padding */
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="left">
+    <!-- Fixed Panel -->
+    <div>
+			<!--<audio controls autoplay loop src="audio/malcolmX_ballot_bullet_excerpt.mp3" type="audio/mp3">
+			</audio>-->
+			<audio id="player" src="audio/malcolmX_ballot_bullet_excerpt.mp3"></audio>
+			<button onclick="document.getElementById('player').play()">></button>
+			<button id="pause" onclick="document.getElementById('player').pause()">II</button>
+			<button onclick="document.getElementById('player').volume+=0.1">+</button>
+			<button onclick="document.getElementById('player').volume-=0.1">-</button>
+		</div>
+    <!-- Carousel Demo -->
+          <div class="carousel-container">
+            <div class="carousel">
+              <div class="carousel-slide">
+                <img
+                  src="https://picsum.photos/seed/css1/800/400"
+                  alt="Slide 1"
+                />
+              </div>
+              <div class="carousel-slide">
+                <img
+                  src="https://picsum.photos/seed/css2/800/400"
+                  alt="Slide 2"
+                />
+              </div>
+              <div class="carousel-slide">
+                <img
+                  src="https://picsum.photos/seed/css3/800/400"
+                  alt="Slide 3"
+                />
+              </div>
+              <div class="carousel-slide">
+                <img
+                  src="https://picsum.photos/seed/css4/800/400"
+                  alt="Slide 4"
+                />
+              </div>
+            </div>
+          </div>
+  </div>
+
+  <div class="right">
+
+    <section id="title">
+      <div style="padding-top:30vh;">
+        Malcolm X (May 19, 1925 - February 21, 1965) was an African American revolutionary and Black nationalist leader who rose from a background of poverty, family disruption, and criminal activity to a prominent figure during the civil rights movement until his assassination in 1965. He discovered the religious organization the Nation of Islam while in prison and served as its spokesperson from 1952 until 1964.
+      </div>
+    </section>
+
+    <section>
+      <div class="content">
+        <p>
+          <img src="img/mlkMalcolmX.webp" alt="Martin Luther King with Malcolm X" style="float: left; width: 30%;padding-right: 20px;" />
+        </p>
+        "Education is our passport to the future, for tomorrow belongs to the people who prepare for it today."
+        </p>
+        <p>
+        "My alma mater was books, a good library... I could spend the rest of my life reading, just satisfying my curiosity."
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="content">
+        <img src="img/educationPays2024.png" alt="Education Pays 2024" style="width: 100%;" />
+        <p>
+          Source: <a href="https://www.bls.gov/careeroutlook/2025/data-on-display/education-pays.htm" target="_blank">Education Pays 2024</a>, U.S. Bureau of Labor Statistics, 2024</a>
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+</div>
+
+</body>
+</html>
